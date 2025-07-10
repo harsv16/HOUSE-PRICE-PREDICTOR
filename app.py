@@ -1,7 +1,8 @@
-st.set_page_config(page_title="House Price Predictor", page_icon="🏡")
 import streamlit as st
 import joblib
 import numpy as np
+
+st.set_page_config(page_title="House Price Predictor", page_icon="🏡")
 
 # Load model
 model = joblib.load('model.pkl')
