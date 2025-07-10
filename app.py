@@ -1,3 +1,4 @@
+st.set_page_config(page_title="House Price Predictor", page_icon="🏡")
 import streamlit as st
 import joblib
 import numpy as np
