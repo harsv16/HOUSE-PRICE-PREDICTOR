@@ -1,22 +1,30 @@
 import streamlit as st
-import joblib
+import pickle
 import numpy as np
 
-st.set_page_config(page_title="House Price Predictor", page_icon="🏡")
-
 # Load model
-model = joblib.load('model.pkl')
-features = joblib.load('features.pkl')
+model = pickle.load(open("model.pkl", "rb"))
 
-st.title("🏠 House Price Prediction App")
+st.set_page_config(page_title="House Price Predictor", page_icon="🏡")
+st.title("🏡 House Price Prediction App")
 
-st.markdown("Enter the house details to estimate the price:")
+# Input fields
+location = st.selectbox("Select Location", ["Mumbai", "Bengaluru", "Delhi", "Pune", "Hyderabad"])
+area = st.number_input("Area (in sqft)", min_value=300)
+bedrooms = st.selectbox("Number of Bedrooms", [1, 2, 3, 4, 5])
+bathrooms = st.selectbox("Number of Bathrooms", [1, 2, 3, 4])
+age = st.slider("Age of the Property (years)", 0, 50)
 
-user_input = []
-for feature in features:
-    val = st.number_input(f"{feature}", step=1.0)
-    user_input.append(val)
-
-if st.button("Predict"):
-    prediction = model.predict([user_input])[0]
-    st.success(f"Estimated House Price: ₹ {prediction:,.2f}")
+# Predict button
+if st.button("Predict Price"):
+    data = {
+        "Location": [location],
+        "Area (sqft)": [area],
+        "Bedrooms": [bedrooms],
+        "Bathrooms": [bathrooms],
+        "Age": [age]
+    }
+    import pandas as pd
+    input_df = pd.DataFrame(data)
+    prediction = model.predict(input_df)
+    st.success(f"Estimated House Price: ₹ {round(prediction[0], 2)} lakhs")
